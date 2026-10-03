@@ -1,0 +1,5 @@
+@extends('layouts.auth')
+@section('title', 'Lupa kata sandi')
+@section('content')
+<h1 class="text-2xl font-bold font-display text-neutral-800">Lupa kata sandi</h1><p class="text-sm text-neutral-500 mt-1 mb-6">Masukkan email untuk menerima tautan pengaturan ulang.</p><form data-demo class="space-y-5"><div><label for="email" class="block text-sm font-semibold text-neutral-700 mb-1.5">Email</label><input id="email" name="email" type="email" placeholder="nama@usaha.id" value="" class="w-full rounded-input border border-neutral-300 bg-white px-3 py-2.5 text-sm text-neutral-800 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-finbisku-gold-300 focus:border-finbisku-gold-400"></div><button type="submit" class="w-full inline-flex items-center justify-center gap-2 bg-finbisku-gold-400 text-white px-4 py-2 rounded-btn text-sm font-bold font-display hover:bg-finbisku-gold-500 hover:shadow-md transition-all">Kirim tautan</button></form><p class="mt-6 text-center text-sm text-neutral-500"><a href="/login" class="font-semibold text-finbisku-gold-600 hover:text-finbisku-gold-500">Kembali ke halaman masuk</a></p>
+@endsection
