@@ -6,7 +6,7 @@
 @section('content')
 
     <x-alert type="success" title="Laporan berhasil dikirim!">
-        Terima kasih, {{ $laporan['nama'] }}. Laporan Anda sudah kami terima dan akan segera ditindaklanjuti oleh BPBD
+        Terima kasih, {{ $laporan->nama_pelapor }}. Laporan Anda sudah tersimpan dan akan segera ditindaklanjuti oleh BPBD
         Kabupaten Bandung.
     </x-alert>
 
@@ -15,23 +15,23 @@
         <table class="detail-table">
             <tr>
                 <th>Nama Pelapor</th>
-                <td>{{ $laporan['nama'] }}</td>
+                <td>{{ $laporan->nama_pelapor }}</td>
             </tr>
             <tr>
-                <th>Kecamatan</th>
-                <td>{{ $laporan['kecamatan'] }}</td>
-            </tr>
-            <tr>
-                <th>Desa / Kelurahan</th>
-                <td>{{ $laporan['desa'] }}</td>
+                <th>Lokasi</th>
+                <td>{{ $laporan->lokasi }}</td>
             </tr>
             <tr>
                 <th>Tinggi Genangan</th>
-                <td>{{ $laporan['tinggi'] }} cm</td>
+                <td>{{ $laporan->tinggi_genangan }} cm</td>
+            </tr>
+            <tr>
+                <th>Tanggal Kejadian</th>
+                <td>{{ $laporan->tanggal_kejadian->format('d-m-Y') }}</td>
             </tr>
             <tr>
                 <th>Waktu Pengiriman</th>
-                <td>{{ $laporan['waktu'] }}</td>
+                <td>{{ $laporan->created_at->timezone('Asia/Jakarta')->format('d-m-Y H:i') }} WIB</td>
             </tr>
         </table>
 

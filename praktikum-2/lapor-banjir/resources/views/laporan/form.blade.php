@@ -16,8 +16,8 @@
 
         <div class="form-group">
             <label for="nama">Nama Pelapor</label>
-            <input type="text" id="nama" name="nama" value="{{ old('nama') }}" placeholder="Contoh: Asep Sunandar">
-            @error('nama') <small class="error">{{ $message }}</small> @enderror
+            <input type="text" id="nama" name="nama_pelapor" value="{{ old('nama_pelapor') }}" placeholder="Contoh: Asep Sunandar">
+            @error('nama_pelapor') <small class="error">{{ $message }}</small> @enderror
         </div>
 
         <div class="form-group">
@@ -39,9 +39,16 @@
 
         <div class="form-group">
             <label for="tinggi">Tinggi Genangan Air (cm)</label>
-            <input type="number" id="tinggi" name="tinggi" value="{{ old('tinggi') }}" min="0" step="1"
+            <input type="number" id="tinggi" name="tinggi_genangan" value="{{ old('tinggi_genangan') }}" min="0" step="1"
                 placeholder="Contoh: 50">
-            @error('tinggi') <small class="error">{{ $message }}</small> @enderror
+            @error('tinggi_genangan') <small class="error">{{ $message }}</small> @enderror
+        </div>
+
+        <div class="form-group">
+            <label for="tanggal">Tanggal Kejadian</label>
+            <input type="date" id="tanggal" name="tanggal_kejadian" value="{{ old('tanggal_kejadian', $hariIni) }}"
+                max="{{ $hariIni }}">
+            @error('tanggal_kejadian') <small class="error">{{ $message }}</small> @enderror
         </div>
 
         <button type="submit" class="btn">Kirim Laporan</button>

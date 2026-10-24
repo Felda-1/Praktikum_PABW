@@ -15,9 +15,9 @@
     <div class="card-grid">
         @forelse ($daftarLaporan as $laporan)
 
-            @if ($laporan['tinggi'] < 30)
+            @if ($laporan->tinggi_genangan < 30)
                 @include('partials.laporan-card', ['laporan' => $laporan, 'status' => 'Waspada', 'kelas' => 'waspada'])
-            @elseif ($laporan['tinggi'] <= 70)
+            @elseif ($laporan->tinggi_genangan <= 70)
                 @include('partials.laporan-card', ['laporan' => $laporan, 'status' => 'Siaga', 'kelas' => 'siaga'])
             @else
                 @include('partials.laporan-card', ['laporan' => $laporan, 'status' => 'Awas', 'kelas' => 'awas'])

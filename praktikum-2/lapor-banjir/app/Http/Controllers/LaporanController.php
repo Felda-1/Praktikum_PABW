@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Laporan;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -24,69 +25,61 @@ class LaporanController extends Controller
     }
 
     /**
-     * Data contoh laporan (prototipe tanpa database).
-     */
-    private function dataLaporan(): array
-    {
-        return [
-            ['id' => 1, 'nama' => 'Asep Sunandar',   'kecamatan' => 'Dayeuhkolot', 'desa' => 'Citeureup', 'tinggi' => 85,  'tanggal' => '2026-10-20'],
-            ['id' => 2, 'nama' => 'Siti Rahmawati',  'kecamatan' => 'Baleendah',   'desa' => 'Andir',     'tinggi' => 45,  'tanggal' => '2026-10-20'],
-            ['id' => 3, 'nama' => 'Deni Kurniawan',  'kecamatan' => 'Bojongsoang', 'desa' => 'Lengkong',  'tinggi' => 20,  'tanggal' => '2026-10-21'],
-            ['id' => 4, 'nama' => 'Euis Komariah',   'kecamatan' => 'Rancaekek',   'desa' => 'Linggar',   'tinggi' => 30,  'tanggal' => '2026-10-21'],
-            ['id' => 5, 'nama' => 'Yayan Hidayat',   'kecamatan' => 'Majalaya',    'desa' => 'Padamulya', 'tinggi' => 70,  'tanggal' => '2026-10-22'],
-            ['id' => 6, 'nama' => 'Neneng Fitriani', 'kecamatan' => 'Ciparay',     'desa' => 'Sarimahi',  'tinggi' => 120, 'tanggal' => '2026-10-22'],
-        ];
-    }
-
-    /**
      * Halaman form pelaporan.
      */
     public function create()
     {
         return view('laporan.form', [
             'daftarKecamatan' => $this->daftarKecamatan(),
+            'hariIni'         => now('Asia/Jakarta')->toDateString(),
         ]);
     }
 
     /**
-     * Menerima data form (POST), lalu menampilkan halaman konfirmasi.
+     * Menerima data form (POST), menyimpan ke database,
+     * lalu menampilkan halaman konfirmasi.
      */
     public function konfirmasi(Request $request)
     {
+        $hariIni = now('Asia/Jakarta')->toDateString();
+
         $data = $request->validate([
-            'nama'      => ['required', 'string', 'max:100'],
-            'kecamatan' => ['required', Rule::in($this->daftarKecamatan())],
-            'desa'      => ['required', 'string', 'max:100'],
-            'tinggi'    => ['required', 'integer', 'min:0', 'max:1000'],
+            'nama_pelapor'     => ['required', 'string', 'max:100'],
+            'kecamatan'        => ['required', Rule::in($this->daftarKecamatan())],
+            'desa'             => ['required', 'string', 'max:100'],
+            'tinggi_genangan'  => ['required', 'integer', 'min:0', 'max:1000'],
+            'tanggal_kejadian' => ['required', 'date', 'before_or_equal:' . $hariIni],
         ], [
-            'nama.required'      => 'Nama pelapor wajib diisi.',
-            'kecamatan.required' => 'Kecamatan wajib dipilih.',
-            'kecamatan.in'       => 'Kecamatan tidak valid.',
-            'desa.required'      => 'Desa/kelurahan wajib diisi.',
-            'tinggi.required'    => 'Tinggi genangan wajib diisi.',
-            'tinggi.integer'     => 'Tinggi genangan harus berupa angka bulat (cm).',
-            'tinggi.min'         => 'Tinggi genangan tidak boleh negatif.',
-            'tinggi.max'         => 'Tinggi genangan maksimal 1000 cm.',
+            'nama_pelapor.required'          => 'Nama pelapor wajib diisi.',
+            'kecamatan.required'             => 'Kecamatan wajib dipilih.',
+            'kecamatan.in'                   => 'Kecamatan tidak valid.',
+            'desa.required'                  => 'Desa/kelurahan wajib diisi.',
+            'tinggi_genangan.required'       => 'Tinggi genangan wajib diisi.',
+            'tinggi_genangan.integer'        => 'Tinggi genangan harus berupa angka bulat (cm).',
+            'tinggi_genangan.min'            => 'Tinggi genangan tidak boleh negatif.',
+            'tinggi_genangan.max'            => 'Tinggi genangan maksimal 1000 cm.',
+            'tanggal_kejadian.required'      => 'Tanggal kejadian wajib diisi.',
+            'tanggal_kejadian.date'          => 'Tanggal kejadian tidak valid.',
+            'tanggal_kejadian.before_or_equal' => 'Tanggal kejadian tidak boleh melebihi hari ini.',
         ]);
 
-        $laporan = [
-            'nama'      => $data['nama'],
-            'kecamatan' => $data['kecamatan'],
-            'desa'      => $data['desa'],
-            'tinggi'    => (int) $data['tinggi'],
-            'waktu'     => now('Asia/Jakarta')->format('d-m-Y H:i') . ' WIB',
-        ];
+        $laporan = Laporan::create([
+            'nama_pelapor'     => $data['nama_pelapor'],
+            'lokasi'           => $data['desa'] . ', Kec. ' . $data['kecamatan'],
+            'tinggi_genangan'  => (int) $data['tinggi_genangan'],
+            'tanggal_kejadian' => $data['tanggal_kejadian'],
+        ]);
 
         return view('laporan.konfirmasi', compact('laporan'));
     }
 
     /**
-     * Halaman daftar laporan.
+     * Halaman daftar laporan (dari database).
      */
     public function index()
     {
         return view('laporan.index', [
-            'daftarLaporan' => $this->dataLaporan(),
+            'daftarLaporan' => Laporan::all(),
         ]);
     }
 }
