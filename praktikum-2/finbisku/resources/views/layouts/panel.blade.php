@@ -16,7 +16,7 @@
 
             <nav class="px-2.5 py-4 space-y-1 flex-grow overflow-y-auto flex flex-col" aria-label="Menu samping">
                 @yield('menu')
-                <a href="/login" class="w-full flex items-center px-2.5 py-2 rounded-xl text-[#9db8a8] hover:bg-[#1a5c38]/30 hover:text-red-400 transition-all duration-200 mt-auto font-display font-semibold text-sm gap-2.5">
+                <a href="{{ route('login') }}" class="w-full flex items-center px-2.5 py-2 rounded-xl text-[#9db8a8] hover:bg-[#1a5c38]/30 hover:text-red-400 transition-all duration-200 mt-auto font-display font-semibold text-sm gap-2.5">
                     <i data-lucide="log-out" class="h-5 w-5 flex-shrink-0"></i>
                     <span>Logout</span>
                 </a>
@@ -46,6 +46,7 @@
 
         <main class="flex-1 overflow-y-auto bg-neutral-50 p-6">
             <div class="max-w-7xl mx-auto">
+                @include('partials.flash')
                 @yield('content')
             </div>
         </main>

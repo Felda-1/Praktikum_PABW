@@ -1,35 +1,15 @@
 @extends('layouts.user')
 @section('title', 'Keuangan')
 @section('content')
-<div class="flex items-start justify-between flex-wrap gap-3 mb-6">
-    <div>
-        <h1 class="text-2xl font-bold font-display text-neutral-800">Keuangan</h1>
-        <p class="text-sm text-neutral-500 mt-1">Catat pemasukan dan pengeluaran, ringkasan dihitung otomatis.</p>
-    </div>
-    <a href="{{ route('transactions.create') }}" class="inline-flex items-center justify-center gap-2 bg-finbisku-gold-400 text-white px-4 py-2 rounded-btn text-sm font-bold font-display hover:bg-finbisku-gold-500 hover:shadow-md transition-all"><i data-lucide="plus" class="h-4 w-4"></i>Tambah transaksi</a>
-</div>
-
-@if (session('status'))
-    <div class="mb-5 rounded-btn border border-finbisku-green-200 bg-finbisku-green-100 px-4 py-3 text-sm font-semibold text-finbisku-green-600" role="status">{{ session('status') }}</div>
-@endif
+<x-page-header title="Keuangan" subtitle="Catat pemasukan dan pengeluaran, ringkasan dihitung otomatis.">
+    <x-button :href="route('transactions.create')" icon="plus">Tambah transaksi</x-button>
+</x-page-header>
 
 <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 mb-6">
-    <div class="bg-white border border-neutral-200 rounded-card p-6">
-        <div class="flex items-center justify-between"><p class="text-sm text-neutral-500">Total pemasukan</p><span class="h-9 w-9 rounded-btn flex items-center justify-center bg-finbisku-green-100 text-finbisku-green-600"><i data-lucide="trending-up" class="h-5 w-5"></i></span></div>
-        <p class="mt-3 text-2xl font-bold font-display text-neutral-800">Rp {{ number_format($pemasukan, 0, ',', '.') }}</p>
-    </div>
-    <div class="bg-white border border-neutral-200 rounded-card p-6">
-        <div class="flex items-center justify-between"><p class="text-sm text-neutral-500">Total pengeluaran</p><span class="h-9 w-9 rounded-btn flex items-center justify-center bg-red-50 text-red-600"><i data-lucide="trending-down" class="h-5 w-5"></i></span></div>
-        <p class="mt-3 text-2xl font-bold font-display text-neutral-800">Rp {{ number_format($pengeluaran, 0, ',', '.') }}</p>
-    </div>
-    <div class="bg-white border border-neutral-200 rounded-card p-6">
-        <div class="flex items-center justify-between"><p class="text-sm text-neutral-500">Saldo</p><span class="h-9 w-9 rounded-btn flex items-center justify-center bg-finbisku-gold-100 text-finbisku-gold-600"><i data-lucide="wallet" class="h-5 w-5"></i></span></div>
-        <p class="mt-3 text-2xl font-bold font-display {{ $saldo < 0 ? 'text-red-600' : 'text-neutral-800' }}">{{ $saldo < 0 ? '-' : '' }}Rp {{ number_format(abs($saldo), 0, ',', '.') }}</p>
-    </div>
-    <div class="bg-white border border-neutral-200 rounded-card p-6">
-        <div class="flex items-center justify-between"><p class="text-sm text-neutral-500">Margin</p><span class="h-9 w-9 rounded-btn flex items-center justify-center bg-finbisku-green-100 text-finbisku-green-600"><i data-lucide="percent" class="h-5 w-5"></i></span></div>
-        <p class="mt-3 text-2xl font-bold font-display text-neutral-800">{{ $margin === null ? '-' : str_replace('.', ',', (string) $margin).'%' }}</p>
-    </div>
+    <x-stat-card label="Total pemasukan" :value="'Rp '.number_format($pemasukan, 0, ',', '.')" icon="trending-up" tone="green" />
+    <x-stat-card label="Total pengeluaran" :value="'Rp '.number_format($pengeluaran, 0, ',', '.')" icon="trending-down" tone="red" />
+    <x-stat-card label="Saldo" :value="($saldo < 0 ? '-' : '').'Rp '.number_format(abs($saldo), 0, ',', '.')" icon="wallet" tone="gold" />
+    <x-stat-card label="Margin" :value="$margin === null ? '-' : str_replace('.', ',', (string) $margin).'%'" icon="percent" tone="green" />
 </div>
 
 <div class="bg-white border border-neutral-200 rounded-card p-6 mb-6">
@@ -47,7 +27,7 @@
     <div class="bg-white border border-neutral-200 rounded-card p-6 text-center py-12">
         <h2 class="font-bold font-display text-neutral-800">Mulai catat transaksi pertamamu</h2>
         <p class="mt-1 text-sm text-neutral-500">Data disimpan sementara di session, bukan di database.</p>
-        <a href="{{ route('transactions.create') }}" class="inline-flex items-center justify-center gap-2 bg-finbisku-gold-400 text-white px-4 py-2 rounded-btn text-sm font-bold font-display hover:bg-finbisku-gold-500 hover:shadow-md transition-all mt-5">Tambah transaksi</a>
+        <x-button :href="route('transactions.create')" class="mt-5">Tambah transaksi</x-button>
     </div>
 @else
     <div class="flex items-center justify-between flex-wrap gap-3 mb-3">

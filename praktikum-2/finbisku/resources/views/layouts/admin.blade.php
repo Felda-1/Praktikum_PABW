@@ -1,18 +1,18 @@
 @extends('layouts.panel')
 
-@section('homeUrl', '/admin')
-@section('profileUrl', '/admin/profile')
+@section('homeUrl', route('admin.dashboard'))
+@section('profileUrl', route('admin.profile'))
 @section('userName', 'Administrator')
 @section('userRole', 'admin')
 
 @section('menu')
-<div class="pt-4 pb-2 px-2.5 text-[10px] font-semibold text-[#6b8a78] uppercase tracking-wider font-display">Ringkasan</div>
-<x-sidebar-item href="/admin" icon="layout-dashboard" :active="request()->is('admin')">Dashboard</x-sidebar-item>
-<div class="pt-4 pb-2 px-2.5 text-[10px] font-semibold text-[#6b8a78] uppercase tracking-wider font-display">Manajemen</div>
-<x-sidebar-item href="/admin/articles" icon="file-text" :active="request()->is('admin/articles*')">Articles</x-sidebar-item>
-<x-sidebar-item href="/admin/users" icon="users" :active="request()->is('admin/users*')">Users</x-sidebar-item>
-<div class="pt-4 pb-2 px-2.5 text-[10px] font-semibold text-[#6b8a78] uppercase tracking-wider font-display">Pengaturan</div>
-<x-sidebar-item href="/admin/profile" icon="user" :active="request()->is('admin/profile')">Profile</x-sidebar-item>
+<x-sidebar-heading>Ringkasan</x-sidebar-heading>
+<x-sidebar-item :href="route('admin.dashboard')" icon="layout-dashboard" :active="request()->routeIs('admin.dashboard')">Dashboard</x-sidebar-item>
+<x-sidebar-heading>Manajemen</x-sidebar-heading>
+<x-sidebar-item :href="route('admin.articles.index')" icon="file-text" :active="request()->routeIs('admin.articles.*')">Articles</x-sidebar-item>
+<x-sidebar-item :href="route('admin.users.index')" icon="users" :active="request()->routeIs('admin.users.*')">Users</x-sidebar-item>
+<x-sidebar-heading>Pengaturan</x-sidebar-heading>
+<x-sidebar-item :href="route('admin.profile')" icon="user" :active="request()->routeIs('admin.profile')">Profile</x-sidebar-item>
 @endsection
 
 @section('headerLeft')
