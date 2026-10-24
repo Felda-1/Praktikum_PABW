@@ -2,14 +2,20 @@
 
 namespace Tests\Feature;
 
+use App\Models\Business;
+use App\Models\Transaction;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class NamedRouteTest extends TestCase
 {
+    use RefreshDatabase;
+
     protected function setUp(): void
     {
         parent::setUp();
         $this->withoutVite(); // tidak perlu `npm run build` untuk menguji Blade
+        $this->seed();        // usaha & transaksi dibaca dari database
     }
 
     public static function halaman(): array
@@ -62,6 +68,15 @@ class NamedRouteTest extends TestCase
     {
         $this->get(route('articles.show', 999))->assertNotFound();
         $this->get(route('admin.users.show', 999))->assertNotFound();
+        $this->get(route('business.show', 999))->assertNotFound();
+    }
+
+    public function test_seeder_membuat_data_dan_ditampilkan_di_halaman_usaha(): void
+    {
+        $this->assertGreaterThanOrEqual(10, Business::count());
+        $this->assertGreaterThanOrEqual(10, Transaction::count());
+
+        $this->get(route('business.index'))->assertSee(Business::first()->nama);
     }
 
     public function test_navigasi_publik_memakai_named_route(): void

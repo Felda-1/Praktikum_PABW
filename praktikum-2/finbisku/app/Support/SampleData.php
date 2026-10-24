@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Support;
-
 /**
  * Sumber data contoh tunggal untuk prototipe tanpa database.
  * Controller mengambil data dari sini, lalu Blade menampilkannya dengan @foreach/@forelse.

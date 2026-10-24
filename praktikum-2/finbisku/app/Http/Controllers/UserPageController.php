@@ -2,13 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Business;
+use App\Models\Transaction;
 use App\Support\SampleData;
 
 class UserPageController extends Controller
 {
     public function dashboard()
     {
-        return view('user.dashboard', ['stats' => SampleData::userStats()]);
+        $awalBulan = now()->startOfMonth();
+
+        $pemasukan = (int) Transaction::where('jenis', 'pemasukan')->where('tanggal', '>=', $awalBulan)->sum('jumlah');
+        $pengeluaran = (int) Transaction::where('jenis', 'pengeluaran')->where('tanggal', '>=', $awalBulan)->sum('jumlah');
+        $saldo = $pemasukan - $pengeluaran;
+
+        $rupiah = fn (int $n) => ($n < 0 ? '-' : '').'Rp '.number_format(abs($n), 0, ',', '.');
+
+        $stats = [
+            ['label' => 'Pemasukan bulan ini', 'value' => $rupiah($pemasukan), 'icon' => 'trending-up', 'tone' => 'green'],
+            ['label' => 'Pengeluaran bulan ini', 'value' => $rupiah($pengeluaran), 'icon' => 'trending-down', 'tone' => 'red'],
+            ['label' => 'Saldo', 'value' => $rupiah($saldo), 'icon' => 'wallet', 'tone' => 'gold'],
+            ['label' => 'Jumlah usaha', 'value' => (string) Business::count(), 'icon' => 'briefcase', 'tone' => 'green'],
+        ];
+
+        $terbaru = Transaction::with('business')->orderByDesc('tanggal')->orderByDesc('id')->take(5)->get();
+
+        return view('user.dashboard', ['stats' => $stats, 'terbaru' => $terbaru]);
     }
 
     public function articles()
@@ -28,12 +47,12 @@ class UserPageController extends Controller
 
     public function businesses()
     {
-        return view('user.business.index', ['businesses' => SampleData::businesses()]);
+        return view('user.business.index', ['businesses' => Business::orderBy('nama')->get()]);
     }
 
     public function business(int $id)
     {
-        return view('user.business.show', ['business' => SampleData::find(SampleData::businesses(), $id)]);
+        return view('user.business.show', ['business' => Business::findOrFail($id)]);
     }
 
     public function blogs()
